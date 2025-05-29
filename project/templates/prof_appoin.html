@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Appointment Requests</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px;
+            border: 1px solid #000;
+            text-align: left;
+        }
+
+        th {
+            background-color: #222;
+            color: #fff;
+        }
+
+        .accept-btn {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .accept-btn:hover {
+            background-color: #218838;
+        }
+
+        .appointment-form {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+    
+        /* Overlay to darken the background */
+        .overlay {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+    
+        /* Show the form with fade-in */
+        .appointment-form.show, .overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .appointment-form h3 {
+            margin-bottom: 10px;
+        }
+
+        .appointment-form label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .appointment-form input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Appointment Requests</h1>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Email</th>
+                        <th>Reason</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                        <tr>
+                            <td>{{ appointment.student_name }}</td>
+                            <td>{{ appointment.student_username }}</td>
+                            <td>{{ appointment.message }}</td>
+                            <td><button class="accept-btn" onclick="populateForm('{{ appointment.student_name }}', '{{ appointment.student_username }}', '{{ appointment.message }}')">Accept</button>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">No appointment requests found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>                
+            </table>
+        </div>
+    </div>
+    
+    <div class="appointment-form" id="appointment-form">
+        <form method="POST" action="{% url 'accept_appointment' %}">
+            {% csrf_token %}
+            <input type="hidden" name="student_name" id="student_name">
+            <input type="hidden" name="student_username" id="student_username">
+            <input type="hidden" name="message" id="message">
+            <input type="hidden" name="teacher_name" id="teacher_name" value="{{ request.user.get_full_name }}">
+            <input type="hidden" name="teacher_username" id="teacher_username" value="{{ request.user.username }}">
+            <label>Date:</label>
+            <input type="date" name="appointment_date" id="appointment_date" required>
+            <label>Time:</label>
+            <input type="time" name="appointment_time" id="appointment_time" required>
+            <button class="accept-btn" type="submit">Confirm</button>
+        </form>
+    </div>
+    
+    <!-- Overlay for form -->
+    <div class="overlay" id="overlay" onclick="closeForm()"></div>
+
+    <script type="text/javascript">
+        function populateForm(studentName, studentUsername, message) {
+            document.getElementById("student_name").value = studentName;
+            document.getElementById("student_username").value = studentUsername;
+            document.getElementById("message").value = message;
+    
+            document.getElementById("appointment-form").classList.add("show");
+            document.getElementById("overlay").classList.add("show");
+        }
+    
+        function closeForm() {
+            document.getElementById("appointment-form").classList.remove("show");
+            document.getElementById("overlay").classList.remove("show");
+        }
+    
+        document.getElementById("overlay").onclick = closeForm;
+    </script>
+    
+</body>
+</html>
+

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semester Selection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #000000;
+            display: flex;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            width: 80%;
+            max-width: 1000px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 3rem;
+            animation: fadeIn 0.5s ease-in-out;
+            align-items: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .dashboard-container h1 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .semester-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1rem;
+            background-color: #000000;
+            color: #ffffff;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            text-align: center;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #000000;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Select Your Specializations</h1>
+        <div class="semester-buttons">
+            <div class="button-row">
+                <a href="#" class="btn">Core</a>
+                <a href="#" class="btn">AIA</a>
+                <a href="#" class="btn">AIEC</a>
+                <a href="#" class="btn">Big Data</a>
+            </div>
+            <div class="button-row">
+                <a href="#" class="btn">Blockchain</a>
+                <a href="#" class="btn">TOC</a>
+                <a href="#" class="btn">Cloud</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

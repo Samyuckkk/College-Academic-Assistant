@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Appointment System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px;
+            border: 1px solid #000;
+            text-align: center;
+        }
+
+        th {
+            background-color: #222;
+            color: #fff;
+        }
+
+        .appointment-btn {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .appointment-btn:hover {
+            background-color: #218838;
+        }
+
+        .appointment-form {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .appointment-form h3 {
+            margin-bottom: 10px;
+        }
+
+        .appointment-form label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .appointment-form input,
+        .appointment-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Book an Appointment</h1>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Professor Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for teacher in teachers %}
+                    <tr>
+                        <td> {{ teacher.first_name }} {{ teacher.last_name }} </td>
+                        <td><button class="appointment-btn" onclick="showForm('{{ teacher.get_full_name }}', '{{ teacher.username }}')">Get Appointment</button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="overlay" id="overlay" onclick="closeForm()"></div>
+    
+    <div class="appointment-form" id="appointment-form">
+        <h3>Appointment Form</h3>
+        <form action="{% url 'create_appointment' %}" method="POST">
+
+
+            {%csrf_token%}
+
+            <label>Professor:</label>
+            <input type="text" id="professor-display" style="background-color: #f0f0f0; cursor: not-allowed;" readonly>
+            
+            <input type="hidden" id="professor-name" name="professor_name">
+
+            <input type="hidden" id="teacher-username" name="teacher_username">
+    
+
+            <label>Your Name:</label>
+            <input type="text" id="student-name" value="{{ request.user.first_name }} {{ request.user.last_name }}" name="student_name" readonly>
+        
+            <label>Username:</label>
+            <input type="email" id="student-email" value="{{ request.user.username }}" name="student_username" readonly>
+        
+            <label>Reason for Appointment:</label>
+            <textarea id="appointment-reason" name="message" required></textarea> <br>
+        
+            <button type="submit" class="appointment-btn">Submit</button>
+
+        </form>
+    </div>
+    
+
+    <script>
+        function showForm(professorName, professorUsername) {
+            document.getElementById("appointment-form").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+            document.getElementById("professor-name").value = professorName;
+            document.getElementById("teacher-username").value = professorUsername;
+            document.getElementById("professor-display").value = professorName; 
+        }
+        
+        function closeForm() {
+            document.getElementById("appointment-form").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+        
+        function submitForm() {
+            const profName = document.getElementById("professor-name").textContent;
+            const studentName = document.getElementById("student-name").value;
+            const studentEmail = document.getElementById("student-email").value;
+            const reason = document.getElementById("appointment-reason").value;
+        
+            alert(`Appointment with ${profName}\nStudent: ${studentName}\nEmail: ${studentEmail}\nReason: ${reason}`);
+        
+            closeForm();
+        }        
+    </script>
+    
+</body>
+</html>

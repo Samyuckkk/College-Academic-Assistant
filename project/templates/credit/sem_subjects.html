@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semester 1 Course Table</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1000px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px;
+            border: 1px solid #000;
+            text-align: center;
+        }
+
+        th {
+            background-color: #222;
+            color: #fff;
+        }
+
+        /* Reused .btn style from semester dashboard */
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #000000;
+            color: #ffffff;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            text-align: center;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #000000;
+            transform: scale(1.05);
+        }
+
+        /* Popup Form */
+        .popup-form {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            width: 90%;
+            max-width: 500px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.7rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            border: 1px solid #000;
+            font-size: 0.95rem;
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .form-btns {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        /* Overlay behind popup */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 998;
+        }
+
+        .select {
+            width: 100%;
+            padding: 0.7rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            border: 1px solid #000;
+            font-size: 0.95rem;
+            background-color: #fff;
+            color: #000;
+            appearance: none; /* Optional: makes dropdown styling more consistent across browsers */
+        }        
+
+        .alert-box {
+            padding: 15px;
+            background-color: #f44336;
+            color: white;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            position: relative;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .closebtn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 20px;
+        }
+        
+        .closebtn:hover {
+            color: #000;
+        }
+        
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Semester {{ semester }}</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert-box">
+                    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course Name</th>
+                        <th>Course Type</th>
+                        <th>State Guideline Category</th>
+                        <th>Credits</th>
+                        <th>Lecture (hrs)</th>
+                        <th>PR (hrs)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject in subjects %}
+                        <tr>
+                            <td>{{ subject.course_code }}</td>
+                            <td>{{ subject.course_name }}</td>
+                            <td>{{ subject.course_type }}</td>
+                            <td>{{ subject.category }}</td>
+                            <td>{{ subject.credits }}</td> 
+                            <td>{{ subject.lecture_hours }}</td> 
+                            <td>{{ subject.pr_hours }}</td> 
+                            <td><a href="{% url 'edit_subject' subject.id %}" class="btn">Edit</a></td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="8">No courses available for this semester.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <br><br>   
+        <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 1rem;">
+            <button class="btn" onclick="toggleForm()">Add Subject</button> 
+            {% if semester >= 3 %}
+            <a href="{% url 'specializations' %}"><button class="btn">Specializations</button></a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div id="addSubjectForm" class="popup-form">
+        <h2 class="form-title">Add New Subject</h2>
+        
+        <form method="POST" action="{% url 'sem_subjects' semester %}">
+            {% csrf_token %}
+            <input type="text" name="course_code" placeholder="Course Code" required class="input-field">
+            <input type="text" name="course_name" placeholder="Course Name" required class="input-field">
+            {% comment %} <label for="options">Choose Course Type:</label> <br> <br> {% endcomment %}
+            <select id="options" name="course_type" class="select">
+                <option value="" disabled selected>Choose Course Type</option>
+                <option value="Compulsary">Compulsary</option>
+                <option value="Elective">Elective</option>
+            </select>
+            <input type="text" name="category" placeholder="Category (e.g., Core)" required class="input-field">
+            <input type="number" name="credits" placeholder="Credits" required class="input-field">
+            <input type="number" name="lecture_hours" placeholder="Lecture Hours" required class="input-field">
+            <input type="number" name="pr_hours" placeholder="PR Hours" required class="input-field">
+    
+            <div class="form-btns">
+                <button type="submit" class="btn">Save</button>
+                <button type="button" class="btn" onclick="toggleForm()">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+
+    <div id="formOverlay" class="overlay" onclick="toggleForm()"></div>
+    
+
+    <script>
+        function toggleForm() {
+            const form = document.getElementById('addSubjectForm');
+            const overlay = document.getElementById('formOverlay');
+            const isVisible = form.style.display === 'block';
+    
+            form.style.display = isVisible ? 'none' : 'block';
+            overlay.style.display = isVisible ? 'none' : 'block';
+        }
+    </script>
+
+</body>
+</html>

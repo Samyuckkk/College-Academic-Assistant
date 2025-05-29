@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor & Cabin Directory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #000000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 150vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1000px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #000;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px;
+            border: 1px solid #000;
+            text-align: left;
+        }
+
+        th {
+            background-color: #222;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Professor & Cabin Directory</h1>
+        <input type="text" class="search-bar" id="search" placeholder="Search for a professor..." onkeyup="searchTable()">
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Professor Name</th>
+                        <th>Department</th>
+                        <th>Cabin Number</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <tr><td>Dr. John Smith</td><td>Computer Science</td><td>101</td></tr>
+                    <tr><td>Prof. Lisa Johnson</td><td>Mathematics</td><td>202</td></tr>
+                    <tr><td>Dr. Emily Brown</td><td>Physics</td><td>303</td></tr>
+                    <tr><td>Dr. Robert Wilson</td><td>Biology</td><td>404</td></tr>
+                    <tr><td>Prof. Jessica White</td><td>Chemistry</td><td>505</td></tr>
+                    <tr><td>Dr. Michael Davis</td><td>Economics</td><td>606</td></tr>
+                    <tr><td>Prof. Sarah Miller</td><td>Engineering</td><td>707</td></tr>
+                    <tr><td>Dr. William Anderson</td><td>History</td><td>808</td></tr>
+                    <tr><td>Prof. Olivia Martinez</td><td>Philosophy</td><td>909</td></tr>
+                    <tr><td>Dr. Daniel Thomas</td><td>Political Science</td><td>1010</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function searchTable() {
+            let input = document.getElementById("search").value.toLowerCase();
+            let rows = document.querySelectorAll("#table-body tr");
+
+            rows.forEach(row => {
+                let text = row.textContent.toLowerCase();
+                row.style.display = text.includes(input) ? "" : "none";
+            });
+        }
+    </script>
+</body>
+</html>

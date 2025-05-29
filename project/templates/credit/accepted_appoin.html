@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accepted Appointments</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px;
+            border: 1px solid #000;
+            text-align: left;
+        }
+
+        th {
+            background-color: #222;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Accepted Appointments</h1>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Student Username</th>
+                        <th>Message</th>
+                        <th>Appointment Date</th>
+                        <th>Appointment Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in accepted_appointments %}
+                        <tr>
+                            <td>{{ appointment.student_name }}</td>
+                            <td>{{ appointment.student_username }}</td>
+                            <td>{{ appointment.message }}</td>
+                            <td>{{ appointment.appointment_date }}</td>
+                            <td>{{ appointment.appointment_time }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">No accepted appointments to show.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

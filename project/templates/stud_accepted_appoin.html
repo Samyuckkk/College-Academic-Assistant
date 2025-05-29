@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Appointment Requests</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px;
+            border: 1px solid #000;
+            text-align: left;
+        }
+
+        th {
+            background-color: #222;
+            color: #fff;
+        }
+
+        .accept-btn {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .accept-btn:hover {
+            background-color: #218838;
+        }
+
+        .appointment-form {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+    
+        /* Overlay to darken the background */
+        .overlay {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+    
+        /* Show the form with fade-in */
+        .appointment-form.show, .overlay.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .appointment-form h3 {
+            margin-bottom: 10px;
+        }
+
+        .appointment-form label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .appointment-form input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Accepted Appointments</h1>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Teacher Name</th>
+                        <th>Reason</th>
+                        <th>Appointment Date</th>
+                        <th>Appointment Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for x in accepted_appointment %}
+                        <tr>
+                            <td>{{ x.teacher_name }}</td>
+                            <td>{{ x.message }}</td>
+                            <td>{{ x.appointment_date }}</td>
+                            <td>{{ x.appointment_time }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">No accepted appointment found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>                
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,196 @@
+<!-- edit_subject.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Subject</title>
+
+    <style>
+        .content-container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+
+        .form-box {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.47);
+            width: 60%;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .form-group.half-width {
+            width: 48%;
+        }
+
+        .form-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .update-btn {
+            background-color: black;
+            color: white;
+            border: none;
+        }
+
+        .update-btn:hover {
+            background-color: #444;
+        }
+
+        .cancel-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+        }
+
+        .cancel-btn:hover {
+            background-color: #c82333;
+        }
+
+        .alert-box {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .closebtn {
+            margin-left: 15px;
+            color: #721c24;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+    <div class="content-container">
+        <div class="form-box">
+            <h1>Edit Subject: {{ subject.course_code }} - {{ subject.course_name }}</h1>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-box">
+                        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" class="form-container">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="course_code">Course Code:</label>
+                    <input type="text" name="course_code" value="{{ subject.course_code }}" required class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="course_name">Course Name:</label>
+                    <input type="text" name="course_name" value="{{ subject.course_name }}" required class="form-control">
+                </div>
+                
+                <div class="form-group">
+                    <label for="course_type">Course Type:</label>
+                    <select name="course_type" class="form-control">
+                        <option value="Compulsary" {% if subject.course_type == "Compulsary" %}selected{% endif %}>Compulsary</option>
+                        <option value="Elective" {% if subject.course_type == "Elective" %}selected{% endif %}>Elective</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group half-width">
+                        <label for="category">Category:</label>
+                        <input type="text" name="category" value="{{ subject.category }}" required class="form-control">
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label for="credits">Credits:</label>
+                        <input type="number" name="credits" value="{{ subject.credits }}" required class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group half-width">
+                        <label for="lecture_hours">Lecture Hours:</label>
+                        <input type="number" name="lecture_hours" value="{{ subject.lecture_hours }}" required class="form-control">
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label for="pr_hours">PR Hours:</label>
+                        <input type="number" name="pr_hours" value="{{ subject.pr_hours }}" required class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn update-btn">Update</button>
+                    <button type="submit" name="delete" value="True" class="btn update-btn" onclick="return confirm('Are you sure you want to delete this subject?');">Delete</button>
+                    <a href="{% url 'sem_subjects' subject.semester %}" class="btn cancel-btn">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</body>
+</html>
